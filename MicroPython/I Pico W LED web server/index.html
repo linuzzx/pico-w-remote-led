@@ -2,11 +2,38 @@
 <html>
     <head>
         <title>Pico W</title>
+        <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');:root{background-color:#937DC2}body{font-family:'Roboto Mono', monospace;margin:10%;text-align:center}h1{margin-bottom:0.5em;font-size:5em;color:white}.switchdiv{display:flex;justify-content:center}.switch{position:relative;display:inline-block;width:15em;height:8.5em}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:hsl(259, 60%, 90%);-webkit-transition:0.4s;transition:0.4s}.slider:before{position:absolute;content:"";height:6.5em;width:6.5em;left:1em;bottom:1em;background-color:white;-webkit-transition:0.4s;transition:0.4s}input:checked + .slider{background-color:hsl(259, 70%, 40%)}input:checked + .slider:before{-webkit-transform:translateX(6.5em);-ms-transform:translateX(6.5em);transform:translateX(6.5em)}.slider.round{border-radius:8.5em}.slider.round:before{border-radius:50%}
+        </style>
+        <script>
+
+function on_load() {
+    // Get the checkbox
+    var checkBox = document.getElementById("light_switch");
+
+    //$$checked$$//
+}
+
+function light_switch_clicked() {
+  // Get the checkbox
+  var checkBox = document.getElementById("light_switch");
+
+  // If the checkbox is checked, display the output text
+  if (checkBox.checked == true){
+    window.location="\?on";
+  } else {
+    window.location="\?off";
+  }
+}
+        </script>
     </head>
-    <body>
-        <h1>Pico W</h1>
-        <p>Control the onboard LED</p>
-        <a href=\"?led=on\"><button>ON</button></a>&nbsp;
-        <a href=\"?led=off\"><button>OFF</button></a>
+    <body onload="on_load();">
+        <h1>LED</h1>
+        <div class="switchdiv">
+            <label class="switch">
+                <input type="checkbox" id="light_switch" onclick="light_switch_clicked();">
+                <span class="slider round"></span>
+            </label>
+        </div>
     </body>
 </html>
