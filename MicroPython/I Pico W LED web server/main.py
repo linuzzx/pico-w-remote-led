@@ -104,14 +104,12 @@ while True:
             input = input.split("\\")[0]
         print(input)
         
-        response = get_html('index.html')
-
         if input == "?on":
             led.on()
         elif input == "?off":
             led.off()
-            response = get_html('index.html').replace("//$$checked$$//","checkBox.checked = true;")
-        
+            
+        response = get_html('index.html')
         cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
         cl.send(response)
         cl.close()
