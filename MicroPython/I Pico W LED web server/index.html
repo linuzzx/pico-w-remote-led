@@ -11,7 +11,9 @@ function on_load() {
     // Get the checkbox
     var checkBox = document.getElementById("light_switch");
 
-    //$$checked$$//
+    if(window.location.href.indexOf("on") >= 0) {
+        checkBox.checked = true;
+    }
 }
 
 function light_switch_clicked() {
