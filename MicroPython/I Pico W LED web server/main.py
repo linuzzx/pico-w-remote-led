@@ -6,6 +6,7 @@ import urequests as requests
 import time
 from secrets import secrets
 import socket
+import re
 
 # Set country to avoid possible errors
 rp2.country('DE')
@@ -39,9 +40,9 @@ while timeout > 0:
     print('Waiting for connection...')
     time.sleep(1)
 
+led = machine.Pin('LED', machine.Pin.OUT)
 # Define blinking function for onboard LED to indicate error codes    
 def blink_onboard_led(num_blinks):
-    led = machine.Pin('LED', machine.Pin.OUT)
     for i in range(num_blinks):
         led.on()
         time.sleep(.2)
@@ -67,6 +68,8 @@ else:
     print('Connected')
     status = wlan.ifconfig()
     print('ip = ' + status[0])
+    url = "http://" + str(status[0]) + "/"
+    print("url = " + url)
     
 # Function to load in html page    
 def get_html(html_name):
@@ -79,10 +82,13 @@ def get_html(html_name):
 addr = socket.getaddrinfo('0.0.0.0', 80)[0][-1]
 
 s = socket.socket()
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(addr)
 s.listen(1)
 
 print('Listening on', addr)
+
+led_off = False
 
 # Listen for connections
 while True:
@@ -90,22 +96,22 @@ while True:
         cl, addr = s.accept()
         print('Client connected from', addr)
         r = cl.recv(1024)
-        # print(r)
+        input = str(r)
         
-        r = str(r)
-        led_on = r.find('?led=on')
-        led_off = r.find('?led=off')
-        print('led_on = ', led_on)
-        print('led_off = ', led_off)
-        if led_on == 10:
-            print('LED ON')
-            led.value(1)
-            
-        if led_off == 10:
-            print('LED OFF')
-            led.value(0)
-            
+        
+        if url in input:
+            input = input.split(url)[1]
+            input = input.split("\\")[0]
+        print(input)
+        
         response = get_html('index.html')
+
+        if input == "?on":
+            led.on()
+        elif input == "?off":
+            led.off()
+            response = get_html('index.html').replace("//$$checked$$//","checkBox.checked = true;")
+        
         cl.send('HTTP/1.0 200 OK\r\nContent-type: text/html\r\n\r\n')
         cl.send(response)
         cl.close()
