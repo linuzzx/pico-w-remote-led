@@ -11,6 +11,7 @@ function on_load() {
     // Get the checkbox
     var checkBox = document.getElementById("light_switch");
 
+    // if LED is already on (/?on) make the switch on too
     if(window.location.href.indexOf("on") >= 0) {
         checkBox.checked = true;
     }
